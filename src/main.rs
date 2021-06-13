@@ -15,12 +15,13 @@ fn bar(a: u32, b: u32, c: u32) {
 }
 
 macro_rules! call_them_all {
-    ($($func:ident),+ : $($arg:expr),*) => {
-        $(
-            // This nested repetition is not recognized?
-            $func($($arg)*);
-        )*
+    ($func:ident, $($funcs:ident),* : $($arg:expr),*) => {
+        call_them_all!($func: $($arg),*);
+        call_them_all!($($funcs),*: $($arg),*);
     };
+    ($func:ident : $($arg:expr),*) => {
+        $func($($arg),*);
+    }
 }
 
 fn main() {
